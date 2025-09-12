@@ -1,0 +1,27 @@
+# Customer tracking platform assignment
+This project is a monorepo including the components of a full-stack customer tracking application. 
+The repository is split into two parts:
+- [apps/...](/apps) including all the <i>launchables</i>, that are to be deployed and hosted as a part of the infrastructure
+- [packages/...](/packages/) including utility/configurational packages eliminating redundancy within the project.
+
+[Turbo](turborepo.com) is used to ensure a smooth developer experience as well as reliable pipelines necessary for CI/CD integrations.
+
+### Selected levels
+
+- [x] DB: L2
+- [ ] *Backend/API: L3*
+- [ ] *Cloud/DevOps: L4*
+- [ ] *Frontend: L3*
+  
+***
+
+### Database
+
+>Mongo database hosted on AWS via [mongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database).
+
+#### Data structure
+
+![database diagram](assets/db_diagram.png)
+
+See [packages/db](packages/db) for mongoose `schema/client` implementation.
+
