@@ -25,3 +25,8 @@ The repository is split into two parts:
 
 See [packages/db](packages/db) for mongoose `schema/client` implementation.
 
+### Particular decisions/Notes to self
+
+- **separation of db models:** follows principle of **"queried together, kept together"**
+- **paginated queries:** listed search results can be longer so pagination is required. **Offset based pagination can heavily increase CPU usage** as page number increases, which ideally should not happen but assuming the worst, one "bad" user can hinder the performance of the DB (skipping to page 129 of a poorly targeted search). Hence **cursor based pagination is required**.
+  
