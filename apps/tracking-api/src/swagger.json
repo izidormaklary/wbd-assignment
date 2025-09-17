@@ -1,0 +1,425 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "User Tracking API",
+    "version": "1.0.0",
+    "description": "API documentation for the User Tracking Platform. Every paginated is done with cursor pagination. "
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Users"
+    },
+    {
+      "name": "Sessions"
+    },
+     {
+      "name": "Events"
+    },
+    {
+      "name": "Analytics"
+    }
+  ],
+  "definitions": {
+    "Error": {
+      "type": "object",
+      "properties": {
+        "message": { "type": "string" }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "country": { "type": "string" },
+        "language": { "type": "string" }
+      }
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "startTime": { "type": "string" },
+        "endTime": { "type": "string" },
+        "totalTime": { "type": "number" },
+        "device": { "type": "string" }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sessionId": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["search", "page_view", "add_to_cart", "upsell", "checkout"]
+        },
+        "page": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "timeSpent": { "type": "number" },
+        "metadata": { "type": "object" }
+      }
+    },
+    "EventStats": {
+      "type": "object",
+      "properties": {
+        "count": { "type": "integer" },
+        "avgTimeSpent": { "type": "number" }
+      }
+    },
+    "PageViewStats": {
+      "type": "object",
+      "properties": {
+        "_id": { "type": "string", "description": "Page path" },
+        "count": { "type": "integer" },
+        "avgTimeSpent": { "type": "number" }
+      }
+    },
+    "UserAnalytics": {
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "totalSessions": { "type": "integer" },
+        "avgSessionDuration": { "type": "number" },
+        "events": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/EventStats" }
+        },
+        "pageViews": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/PageViewStats" }
+        },
+        "dateRange": {
+          "type": "object",
+          "properties": {
+            "before": { "type": "string", "format": "date-time" },
+            "after": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    },
+    "GlobalAnalytics": {
+      "type": "object",
+      "properties": {
+        "totalUsers": { "type": "integer" },
+        "totalSessions": { "type": "integer" },
+        "avgSessionDuration": { "type": "number" },
+        "events": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/EventStats" }
+        },
+        "pageViews": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/PageViewStats" }
+        },
+        "dateRange": {
+          "type": "object",
+          "properties": {
+            "before": { "type": "string", "format": "date-time" },
+            "after": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Paginated search for users based on cursor. ",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "type": "string",
+            "description": "Text search on email or name"
+          },
+          {
+            "in": "query",
+            "name": "aggregate",
+            "type": "string",
+            "enum": ["none", "sessions", "sessions&events"],
+            "default": "none",
+            "description": "Temporarily disabled! Define level of aggregation to return. Default is none."
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "type": "string",
+            "description": "Cursor to the page (mongoDB _id). Not provided means first page."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer",
+            "description": "Limit the number of users to return, defines page size.",
+            "default": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users fetched successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "users": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/User" }
+                },
+                "hasNextPage": { "type": "boolean" },
+                "nextCursor": {
+                  "type": "string",
+                  "description": "Cursor to the next page (mongoDB _id)."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Users not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get user by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "User ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User fetched successfully",
+            "schema": { "$ref": "#/definitions/User" }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/users/{userId}/sessions": {
+      "get": {
+        "tags": ["Sessions"],
+        "summary": "Get paginated sessions of a User",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "User ID"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "type": "string",
+            "description": "Cursor to the page (mongoDB _id). Not provided means first page."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer",
+            "description": "Limit the number of sessions to return, defines page size.",
+            "default": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sessions fetched successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "sessions": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Session" }
+                },
+                "hasNextPage": { "type": "boolean" },
+                "nextCursor": {
+                  "type": "string",
+                  "description": "Cursor to the next page (mongoDB _id)."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/sessions/{sessionId}": {
+      "get": {
+        "tags": ["Sessions"],
+        "summary": "Get session by ID",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "Session ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session fetched successfully",
+            "schema": { "$ref": "#/definitions/Session" }
+          },
+          "404": {
+            "description": "Session not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/sessions/{sessionId}/events": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Get paginated events of a session",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "Session ID"
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "type": "string",
+            "description": "Cursor to the page (mongoDB _id). Not provided means first page."
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "type": "integer",
+            "description": "Limit the number of events to return, defines page size.",
+            "default": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Events fetched successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "events": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Event" }
+                },
+                "hasNextPage": { "type": "boolean" },
+                "nextCursor": {
+                  "type": "string",
+                  "description": "Cursor to the next page (mongoDB _id)."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Session not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/analytics/global": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get global analytics with optional date filtering",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "type": "string",
+            "format": "date-time",
+            "description": "Filter data before this date (ISO 8601 format)"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string",
+            "format": "date-time",
+            "description": "Filter data after this date (ISO 8601 format)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Global analytics fetched successfully",
+            "schema": { "$ref": "#/definitions/GlobalAnalytics" }
+          },
+          "400": {
+            "description": "Invalid date format",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/analytics/{userId}": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get analytics for a specific user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "type": "string",
+            "required": true,
+            "description": "User ID"
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "type": "string",
+            "format": "date-time",
+            "description": "Filter data before this date (ISO 8601 format)"
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "type": "string",
+            "format": "date-time",
+            "description": "Filter data after this date (ISO 8601 format)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User analytics fetched successfully",
+            "schema": { "$ref": "#/definitions/UserAnalytics" }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    }
+  },
+  "schemes": ["http"]
+}
