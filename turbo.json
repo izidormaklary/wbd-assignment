@@ -12,7 +12,7 @@
       "cache": false,
       "persistent": true,
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "env": ["MONGODB_URI"]
+      "env": ["BACKEND_API_URL", "CLERK_SECRET_KEY", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "MONGODB_URI"]
     }
   }
 }

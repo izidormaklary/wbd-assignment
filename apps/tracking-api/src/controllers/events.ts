@@ -1,4 +1,4 @@
-import { Event, Session, User } from "@repo/db/schema";
+import { Event } from "@repo/db/schema";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
@@ -33,7 +33,7 @@ export const geSessionEvents = async (req: Request, res: Response) => {
     const pageSize = Math.max(parseInt(limit as string, 10), 1);
 
     const filter: Record<string, any> = {
-      sessionId: new mongoose.Types.ObjectId(sessionId ),
+      sessionId: new mongoose.Types.ObjectId(sessionId),
     };
 
     // Add cursor condition (_id > last seen)

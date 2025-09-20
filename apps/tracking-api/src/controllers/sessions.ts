@@ -1,4 +1,4 @@
-import { Session, User } from "@repo/db/schema";
+import { Session } from "@repo/db/schema";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 

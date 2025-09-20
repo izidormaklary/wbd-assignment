@@ -3,7 +3,13 @@ module.exports = {
   root: true,
   extends: ["@repo/eslint-config/library.js"],
   parser: "@typescript-eslint/parser",
+  ignorePatterns: ["dist/", '.next/'],
   parserOptions: {
     project: true,
   },
+  overrides: [
+    {
+      files: ["*.js?(x)", "*.ts?(x)"],
+    },
+  ],
 };

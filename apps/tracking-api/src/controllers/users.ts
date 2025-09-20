@@ -1,4 +1,4 @@
-import { Session, User } from "@repo/db/schema";
+import { User } from "@repo/db/schema";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
@@ -9,7 +9,7 @@ export const getUserById = async (req: Request, res: Response) => {
   }
   try {
     const user = await User.findById(id);
-    if (!user) {  
+    if (!user) {
       return res.status(404).json({ message: "User not found", code: 404 });
     }
     res.json(user);
@@ -18,11 +18,10 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-
-
 export const searchUsers = async (req: Request, res: Response) => {
   try {
-    const { search = "", limit = "10", cursor, aggregate = "none" } = req.query;
+    // aggregate is not used for now
+    const { search = "", limit = "10", cursor } = req.query;
 
     const pageSize = Math.max(parseInt(limit as string, 10), 1);
 
@@ -31,8 +30,8 @@ export const searchUsers = async (req: Request, res: Response) => {
       ? {
           $or: [
             { name: { $regex: search as string, $options: "i" } },
-            { email: { $regex: search as string, $options: "i" } }
-          ]
+            { email: { $regex: search as string, $options: "i" } },
+          ],
         }
       : {};
 
@@ -48,7 +47,7 @@ export const searchUsers = async (req: Request, res: Response) => {
     const pipeline: mongoose.PipelineStage[] = [
       { $match: filter },
       { $sort: { _id: 1 } },
-      { $limit: pageSize + 1 } // fetch one extra to check next page
+      { $limit: pageSize + 1 }, // fetch one extra to check next page
     ];
 
     // // Add session aggregation
