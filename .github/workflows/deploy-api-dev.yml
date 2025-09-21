@@ -1,0 +1,40 @@
+name: Deploy Tracking API to DEV stage
+
+on:
+  push:
+    branches: [dev, main]
+    paths:
+      - "apps/tracking-api/**"
+      - "packages/**"
+  pull_request:
+    branches: [dev, main]
+    paths:
+      - "apps/tracking-api/**"
+      - "packages/db/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: preview
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build packages
+        run: yarn build --filter=tracking-api
+
+      - name: Run turbo deploy
+        run: yarn deploy --filter=tracking-api
+        env:
+          STAGE: dev
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}

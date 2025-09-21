@@ -1,0 +1,11 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "deploy": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$"],
+      "env": ["MONGODB_URI", "SERVERLESS_ACCESS_KEY", "STAGE"]
+    }
+ 
+  }
+}
