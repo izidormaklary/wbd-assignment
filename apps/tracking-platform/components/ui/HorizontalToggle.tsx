@@ -8,7 +8,7 @@ export default function HorizontalToggle<T extends string[]>({
   onSelect: (selected: T[number]) => void;
 }) {
   return (
-    <div className="flex flex-row gap-24 justify-between bg-gray-300 inset-shadow-sm rounded-full p-0.5">
+    <div className="flex flex-row gap-24 text-sm justify-between bg-gray-300 inset-shadow-sm mx-auto rounded-full p-0.5">
       {options.map((item) => (
         <div
           key={item}

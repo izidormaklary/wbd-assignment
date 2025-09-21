@@ -4,6 +4,7 @@ import UserPageHeader from "../../../components/user/UserPageHeader";
 import Loading from "../../../components/layout/Loading";
 import { use } from "react";
 import UserAnalyticsCard from "../../../components/user/UserAnalyticsCard";
+import SessionsCard from "../../../components/sessions/SessionsCard";
 
 export default function UserPage({
   params,
@@ -11,18 +12,7 @@ export default function UserPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  //   const {
-  //     data: user,
-  //     isLoading,
-  //     isError,
-  //   } = useQuery({
-  //     queryKey: ["user", id],
-  //     queryFn: () => fetch(`/api/users/${id}`).then((res) => res.json()),
-  //   });
-  //   const {data:analytics, isLoading:isAnalyticsLoading, isError:isAnalyticsError} = useQuery({
-  //     queryKey: ["analytics", id],
-  //     queryFn: () => fetch(`/api/analytics/${id}`).then((res) => res.json()),
-  //   });
+
   const results = useQueries({
     queries: [
       {
@@ -39,6 +29,7 @@ export default function UserPage({
       },
     ],
   });
+
   const user = results[0].data;
   const analytics = results[1].data;
   const globalAnalytics = results[2].data;
@@ -55,6 +46,7 @@ export default function UserPage({
         analytics={analytics}
         globalAnalytics={globalAnalytics}
       />
+      <SessionsCard userId={id} />
     </div>
   );
 }

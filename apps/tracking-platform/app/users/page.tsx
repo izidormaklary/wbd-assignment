@@ -39,7 +39,7 @@ export default function Users() {
       if (cursor) params.append("cursor", cursor);
       if (before) params.append("before", before);
       if (after) params.append("after", after);
-      params.append("limit", "1");
+      params.append("limit", "10");
 
       return fetch(`/api/users?${params}`).then((res) => res.json());
     },
