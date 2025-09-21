@@ -7585,16 +7585,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-google-charts@npm:^5.2.1":
-  version: 5.2.1
-  resolution: "react-google-charts@npm:5.2.1"
-  peerDependencies:
-    react: ">=16.3.0"
-    react-dom: ">=16.3.0"
-  checksum: e7ad0533fff270a249cc95a2399daa4724057604ff8945f6da5a5b4129a7fc7394e14aab571e3ee716559bb33bb06d5c7d3de90f312ccc81f0d503425f587d90
-  languageName: node
-  linkType: hard
-
 "react-icons@npm:^5.5.0":
   version: 5.5.0
   resolution: "react-icons@npm:5.5.0"
@@ -8933,7 +8923,6 @@ __metadata:
     postcss: "npm:^8.5.6"
     react: "npm:^19.1.0"
     react-dom: "npm:^19.1.0"
-    react-google-charts: "npm:^5.2.1"
     react-icons: "npm:^5.5.0"
     reactflow: "npm:^11.11.4"
     recharts: "npm:^3.2.1"

@@ -33,38 +33,31 @@ export default function UserAnalyticsCard({
           onSelect={(value) => setSelected(value)}
         />
         {selected === "pages" && (
-          <div className="flex flex-col items-center justify-center gap-2">
+          <div className="w-full flex flex-row gap-2">
             <PageViewsChart
-              pageViews={
-                analytics.pageViews.map((pageView) => [
-                  pageView._id,
-                  pageView.count,
-                ]) as [string, number][]
-              }
+              pageViews={analytics.pageViews.map((pageView) => ({
+                page: pageView._id,
+                visits: pageView.count,
+              }))}
             />
             <PageAvgTimeChart
-              pageViews={
-                analytics.pageViews.map((pageView) => [
-                  pageView._id,
-                  pageView.avgTimeSpent,
-                ]) as [string, number][]
-              }
+              pageViews={analytics.pageViews.map((pageView) => ({
+                page: pageView._id,
+                avgTime: pageView.avgTimeSpent,
+              }))}
             />
           </div>
         )}
         {selected === "events" && (
-          <div className="flex flex-col items-center justify-center gap-2">
-            <EventCountsComparisonChart
-              eventCounts={
-                Object.keys(globalAnalytics.events).map((event) => [
-                  event,
-                  analytics.events[event]?.count ?? 0,
-                  globalAnalytics.events[event]!.count /
-                    globalAnalytics.totalUsers,
-                ]) as [string, number, number][]
-              }
-            />
-          </div>
+          <EventCountsComparisonChart
+            eventCounts={Object.keys(globalAnalytics.events).map((event) => ({
+              event: event,
+              user: analytics.events[event]?.count ?? 0,
+              globalAvg:
+                globalAnalytics.events[event]!.count /
+                globalAnalytics.totalUsers,
+            }))}
+          />
         )}
       </div>
     </Card>
