@@ -32,7 +32,7 @@ export default function UsersHeader({ onSearch }: UsersHeaderProps) {
   };
 
   return (
-    <Card className="flex flex-col gap-4 items-start justify-between">
+    <Card className="flex flex-col gap-4 items-start">
       <h1 className="text-2xl font-bold">Search Users</h1>
       <div className="flex flex-row w-full justify-between">
         <div className="flex flex-row gap-2">
