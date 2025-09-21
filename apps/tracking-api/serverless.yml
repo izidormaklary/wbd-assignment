@@ -1,0 +1,70 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: izidor
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: tracking-platform
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: tracking-api
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  # Uncomment to easily set up a custom domain. Read the docs for more details:
+  # https://www.serverless.com/framework/docs/providers/aws/guide/domains
+  # domain: api.example.com
+  region: eu-central-1
+  timeout: 25
+  memorySize: 512
+  environment:
+    MONGODB_URI: ${env:MONGODB_URI}
+
+package:
+  patterns:
+    - "!src/**"
+    - "!rollup.config.js"
+    - "!tsconfig.json"
+    - "!**/*.ts"
+    - "dist/**"
+    - "node_modules/@repo/**"
+    - "node_modules/@codegenie/**"
+    - "node_modules/express/**"
+    - "node_modules/mongoose/**"
+    - "node_modules/swagger-ui-express/**"
+    - "node_modules/env-cmd/**"
+    - "node_modules/**/package.json"
+functions:
+  tracking-api-handler:
+    name: tracking-api-handler-${env:STAGE}
+    handler: dist/lambda.handler
+    events:
+      - http:
+          path: /api-docs
+          method: get
+          cors: true
+      - http:
+          path: /users
+          method: get
+          cors: true
+      - http:
+          path: /users/{userId}
+          method: get
+          cors: true
+      - http:
+          path: /users/{userId}/sessions
+          method: get
+          cors: true
+      - http:
+          path: /sessions/{sessionId}
+          method: get
+          cors: true
+      - http:
+          path: /sessions/{sessionId}/events
+          method: get
+          cors: true
+      - http:
+          path: /analytics/global
+          method: get
+          cors: true
+      - http:
+          path: /analytics/{userId}
+          method: get
+          cors: true

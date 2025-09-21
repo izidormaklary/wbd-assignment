@@ -8,9 +8,9 @@ node_modules
 # Local env files
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.dev
+.env.test
+.env.prod
 
 # Testing
 coverage
@@ -20,6 +20,9 @@ coverage
 
 # Vercel
 .vercel
+
+# Serverless
+.serverless
 
 # Build Outputs
 .next/

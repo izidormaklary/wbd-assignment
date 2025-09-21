@@ -5,7 +5,27 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
 import { geSessionEvents } from "./controllers/events";
 import { getGlobalAnalytics, getUserAnalytics } from "./controllers/analytics";
+import { preroute } from "./utils/preroute";
+
 const app = express();
+
+// Add JSON parsing middleware
+app.use(express.json());
+
+// Add preroute middleware to handle stage prefix
+app.use(preroute);
+
+// Add request logging middleware
+app.use((req, res, next) => {
+  console.log('📥 Incoming request:', req.method, req.path, req.url);
+  next();
+});
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  console.log('🏥 Health check endpoint hit');
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
 
 // user routes
 app.get("/users", searchUsers);

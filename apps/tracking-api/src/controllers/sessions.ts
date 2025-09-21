@@ -54,7 +54,7 @@ export const getUserSessions = async (req: Request, res: Response) => {
     const hasNextPage = results.length > pageSize;
     const sessions = hasNextPage ? results.slice(0, pageSize) : results;
     const nextCursor = hasNextPage ? sessions[sessions.length - 1]._id : null;
-    res.json({ sessions, nextCursor, hasNextPage });
+    return res.json({ sessions, nextCursor, hasNextPage });
   } catch (error) {
     console.error("❌ Error in getUserSessions:", error);
     return res.status(500).json({ message: "Internal server error" });

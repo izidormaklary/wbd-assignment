@@ -25,6 +25,7 @@ The repository is split into two parts:
 
 See [packages/db](packages/db) for mongoose `schema/client` implementation.
 
+
 ### Particular decisions/Notes to self
 
 - **separation of db models:** follows principle of **"queried together, kept together"**

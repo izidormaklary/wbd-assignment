@@ -3,7 +3,7 @@ module.exports = {
   root: true,
   extends: ["@repo/eslint-config/library.js"],
   parser: "@typescript-eslint/parser",
-  ignorePatterns: ["dist/", '.next/'],
+  ignorePatterns: ["dist/", '.next/', 'rollup.config.js'],
   parserOptions: {
     project: true,
   },

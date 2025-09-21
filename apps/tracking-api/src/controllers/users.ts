@@ -12,9 +12,9 @@ export const getUserById = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ message: "User not found", code: 404 });
     }
-    res.json(user);
+    return res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", code: 500 });
+    return res.status(500).json({ message: "Internal server error", code: 500 });
   }
 };
 
@@ -93,10 +93,10 @@ export const searchUsers = async (req: Request, res: Response) => {
     const hasNextPage = results.length > pageSize;
     const users = hasNextPage ? results.slice(0, pageSize) : results;
     const nextCursor = hasNextPage ? users[users.length - 1]._id : null;
-
-    res.json({ users, nextCursor, hasNextPage });
+    console.log('📤 Sending response with', users.length, 'users');
+    return res.json({ users, nextCursor, hasNextPage });
   } catch (error) {
     console.error("❌ Error in searchUsers:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
