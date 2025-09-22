@@ -61,7 +61,13 @@ Frontend requires `.env.local` file in `apps/tracking-platform/` including
  Lambda deployment is covered by github actions leveraging the serverless framework. 
  The frontend is deployed through vercel.
 
- Both automatically on push. (lambda currently only deployed on pushes to the `origin/dev` branch )
+ Both automatically on push. (lambda currently only deployed on pushes to the `origin/dev` and `origin/main`  branches)
+
+ ```bash
+ # deploying tracking-api from root (dummy env provider) 
+ # uses turbo so building step is included
+ provide-env -- yarn deploy --filter="tracking-api"
+ ```
 
  ### System architecture
 
