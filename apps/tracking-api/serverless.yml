@@ -15,7 +15,7 @@ provider:
   timeout: 25
   memorySize: 512
   environment:
-    MONGODB_URI: ${env:MONGODB_URI}
+    MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/tracking'}
 
 package:
   patterns:
@@ -33,7 +33,7 @@ package:
     - "node_modules/**/package.json"
 functions:
   tracking-api-handler:
-    name: tracking-api-handler-${env:STAGE}
+    name: tracking-api-handler-${env:STAGE, 'dev'}
     handler: dist/lambda.handler
     events:
       - http:

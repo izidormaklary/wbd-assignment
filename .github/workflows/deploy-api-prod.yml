@@ -2,10 +2,16 @@ name: Deploy Tracking API to DEV stage
 
 on:
   push:
-    branches: [dev]
+    branches: [main]
     paths:
       - "apps/tracking-api/**"
       - "packages/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/tracking-api/**"
+      - "packages/db/**"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -29,6 +35,6 @@ jobs:
       - name: Run turbo deploy
         run: yarn deploy --filter=tracking-api
         env:
-          STAGE: dev
+          STAGE: prod
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
