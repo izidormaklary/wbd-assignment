@@ -6,6 +6,8 @@ The repository is split into two parts:
 
 [Turbo](turborepo.com) is used to ensure a smooth developer experience as well as reliable pipelines necessary for CI/CD integrations.
 
+The Project is available at [wbd.izidor.dev](https://wbd.izidor.dev)
+(requires login, users data will be deleted upon request)
 
 ### Selected levels
 
@@ -65,3 +67,9 @@ Frontend requires `.env.local` file in `apps/tracking-platform/` including
 
 ![system architecture](assets/SystemGraph.png)
 
+### Prototype
+
+The figma link to the prototype is invitation only, so I made a short gif depicting it.
+Feel free to ask for the invite here: [figma link](https://www.figma.com/proto/C9lGWlpdzn82klbHH5ttxb/Untitled?page-id=0%3A1&node-id=3-220&viewport=347%2C232%2C0.12&t=EyE5uaseeoJjK7kD-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=3%3A220).
+
+![prototype](assets/prototype.gif)
