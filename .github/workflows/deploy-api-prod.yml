@@ -1,4 +1,4 @@
-name: Deploy Tracking API to DEV stage
+name: Deploy Tracking API to PROD stage
 
 on:
   push:
@@ -15,7 +15,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: preview
+    environment: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
